@@ -34,9 +34,7 @@ def build_ssml(text):
                 pause = ET.SubElement(root, 'break', time='400ms')
 
         # Convert the ElementTree object to an XML string
-    ssml_b = ET.tostring(root, encoding='utf8', method='xml')
-    ssml_str = ssml_b.decode('utf8')
-    return ssml_str
+    return ET.tostring(root, encoding='utf8', method='xml').decode('utf8')
 
 
 if __name__ == '__main__':
