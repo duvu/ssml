@@ -17,26 +17,25 @@ def build_ssml(text):
 
         # Create a "say-as" element for each phrase
         for i, phrase in enumerate(phrases):
-            # Check if the phrase contains a date(ddMMyyyy) or time (hh:mm)
-            if re.search(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}:\d{2}(?:am|pm)?', phrase):
-                say_as = ET.SubElement(root, 'say-as', {'interpret-as': 'date'})
-            else:
-                # create a "say-as" element with the interpret-as attribute set to "text"
-                say_as = ET.SubElement(root, 'say-as', interpret_as='text')
             if i == 0:
                 # Add emphasis to the first phrase of each sentence
-                emphasis = ET.SubElement(say_as, 'emphasis', level='strong')
+                emphasis = ET.SubElement(root, 'emphasis', level='strong')
                 emphasis.text = phrase.strip()
             else:
+                # Check if the phrase contains a date(ddMMyyyy) or time (hh:mm)
+                if re.search(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}:\d{2}(?:am|pm)?', phrase):
+                    say_as = ET.SubElement(root, 'say-as', {'interpret-as': 'date'})
+                else:
+                    # create a "say-as" element with the interpret-as attribute set to "text"
+                    say_as = ET.SubElement(root, 'say-as', interpret_as='text')
                 say_as.text = phrase.strip()
-
             # Create a "break" element with a duration of 200ms after each phrase
             if phrase != phrases[-1]:
                 pause = ET.SubElement(root, 'break', time='100ms')
 
-            # Create a "break" element with a duration of 400ms after each sentence
-            if sentence != sentences[-1]:
-                pause = ET.SubElement(root, 'break', time='200ms')
+        # Create a "break" element with a duration of 400ms after each sentence
+        if sentence != sentences[-1]:
+            pause = ET.SubElement(root, 'break', time='200ms')
 
         # Convert the ElementTree object to an XML string
     return ET.tostring(root, encoding='utf8', method='xml').decode('utf8')
