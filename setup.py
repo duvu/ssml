@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ssml",
-    version="0.1.6",
+    version="0.1.7",
     author="Vu D.",
     author_email="vu@x51.vn",
     description="A Python library for generating SSML",
