@@ -16,28 +16,33 @@ def build_ssml(text):
         phrases = sentence.split(',')
 
         # Create a "say-as" element for each phrase
-        for phrase in phrases:
+        for i, phrase in enumerate(phrases):
             # Check if the phrase contains a date(ddMMyyyy) or time (hh:mm)
             if re.search(r'\d{1,2}/\d{1,2}/\d{2,4}|\d{1,2}:\d{2}(?:am|pm)?', phrase):
                 say_as = ET.SubElement(root, 'say-as', {'interpret-as': 'date'})
             else:
                 # create a "say-as" element with the interpret-as attribute set to "text"
                 say_as = ET.SubElement(root, 'say-as', interpret_as='text')
-            say_as.text = phrase.strip()
+            if i == 0:
+                # Add emphasis to the first phrase of each sentence
+                emphasis = ET.SubElement(say_as, 'emphasis', level='strong')
+                emphasis.text = phrase.strip()
+            else:
+                say_as.text = phrase.strip()
 
             # Create a "break" element with a duration of 200ms after each phrase
             if phrase != phrases[-1]:
-                pause = ET.SubElement(root, 'break', time='200ms')
+                pause = ET.SubElement(root, 'break', time='100ms')
 
             # Create a "break" element with a duration of 400ms after each sentence
             if sentence != sentences[-1]:
-                pause = ET.SubElement(root, 'break', time='400ms')
+                pause = ET.SubElement(root, 'break', time='200ms')
 
         # Convert the ElementTree object to an XML string
     return ET.tostring(root, encoding='utf8', method='xml').decode('utf8')
 
 
 if __name__ == '__main__':
-    text = 'Hello, my name is John. I was born on 12/12/1990. I live in New York City.'
+    text = 'Trong đơn kiến nghị, Chủ tịch Tập đoàn đầu tư Địa ốc Nova (Novaland) Bùi Thành Nhơn cho biết tại Đồng Nai, các công ty thuộc Novaland là chủ đầu tư của 9 dự án. Đây là thành phần của Khu đô thị kinh tế mở Long Hưng (gồm khu dân cư Long Hưng, khu đô thị WaterFront, Aqua City) và dự án khu đô thị dịch vụ thương mại cao cấp cù lao Phước Hưng. Loạt dự án này đều thuộc phân khu C4, thành phố Biên Hòa, có nguồn gốc từ việc tách dự án hoặc Novaland nhận chuyển nhượng một phần dự án từ các chủ đầu tư cấp một.'
     ssml = build_ssml(text)
     print(ssml)
