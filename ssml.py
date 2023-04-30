@@ -17,9 +17,9 @@ def build_ssml(text):
 
         # Create a "say-as" element for each phrase
         for i, phrase in enumerate(phrases):
-            if i == 0:
+            if i == 1:
                 # Add emphasis to the first phrase of each sentence
-                emphasis = ET.SubElement(root, 'emphasis', level='strong')
+                emphasis = ET.SubElement(root, 'emphasis', level='moderate')
                 emphasis.text = phrase.strip()
             else:
                 # Check if the phrase contains a date(ddMMyyyy) or time (hh:mm)
