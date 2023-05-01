@@ -1,6 +1,22 @@
 import re
 import xml.etree.ElementTree as ET
 
+# define a list of acronym and their expansions, to be used in the SSML tags sub
+acronyms = {
+    'UBND': 'Ủy ban nhân dân',
+    'HĐND': 'Hội đồng nhân dân',
+    'UB': 'Ủy ban',
+    'HĐ': 'Hội đồng',
+    'TP': 'Thành phố',
+    'MTTQ': 'Mặt trận tổ quốc',
+    'ĐBQH': 'Đại biểu quốc hội',
+    'TW': 'Trung ương',
+    'NHNN': 'Ngân hàng nhà nước',
+    'TP.HCM': 'Thành phố Hồ Chí Minh',
+    'TP HCM': 'Thành phố Hồ Chí Minh',
+    'TPHCM': 'Thành phố Hồ Chí Minh',
+    'TP. HCM': 'Thành phố Hồ Chí Minh',
+}
 
 def build_ssml(text):
     # Create the root element with the SSML namespace
@@ -9,7 +25,6 @@ def build_ssml(text):
     # Split the text into sentences
     sentences = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=[.?])\s', text)
 
-    ssml_str = ''
     # Create a "say-as" element for each sentence
     for sentence in sentences:
         # Split the sentence into phrases using commas
@@ -24,7 +39,7 @@ def build_ssml(text):
             say_as.text = phrase.strip()
             # Create a "break" element with a duration of 200ms after each phrase
             if phrase != phrases[-1]:
-                pause = ET.SubElement(root, 'break', time='200ms')
+                pause = ET.SubElement(root, 'break', time='150ms')
 
         # Create a "break" element with a duration of 400ms after each sentence
         if sentence != sentences[-1]:
