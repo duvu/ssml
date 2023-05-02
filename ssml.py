@@ -71,11 +71,11 @@ def break_comma(next_phrase):
 def break_stop(sentence):
     # the break time is base on the length of the sentence, in words. Vary from 400-600ms
     if len(sentence.split()) <= 6:
-        return str(random.randint(400, 500)) + 'ms'
+        return str(random.randint(300, 400)) + 'ms'
     elif len(sentence.split()) <= 9:
-        return str(random.randint(450, 550)) + 'ms'
+        return str(random.randint(350, 450)) + 'ms'
     else:
-        return str(random.randint(500, 600)) + 'ms'
+        return str(random.randint(400, 500)) + 'ms'
 
 
 if __name__ == '__main__':
