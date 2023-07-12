@@ -20,7 +20,7 @@ acronyms = {
 }
 
 
-def build_ssml(text):
+def build_ssml(text, is_shorts=False):
     # Create the root element with the SSML namespace
     root = ET.Element('speak', xmlns='http://www.w3.org/2001/10/synthesis')
 
@@ -41,41 +41,49 @@ def build_ssml(text):
             say_as.text = phrase.strip()
             # Create a "break" element with a duration of 200ms after each phrase
             if phrase != phrases[-1]:
-                break_time = break_comma(phrases[i + 1])
+                break_time = break_comma(phrases[i + 1], shorts=is_shorts)
                 pause = ET.SubElement(root, 'break', time=break_time)
 
         # Create a "break" element with a duration of 400ms after each sentence
         if sentence != sentences[-1]:
-            break_time = break_stop(sentence)
+            break_time = break_stop(sentence, shorts=is_shorts)
             pause = ET.SubElement(root, 'break', time=break_time)
 
         # Convert the ElementTree object to an XML string
     return ET.tostring(root, encoding='utf8', method='xml').decode('utf8')
 
 
-def break_comma(next_phrase):
-    # the break time is based on the length of the next phrase, in words. Vary from 100-400ms
-    if len(next_phrase.split()) <= 3:
-        # get a random break time from 50-150ms
-        return str(random.randint(50, 150)) + 'ms'
-    elif len(next_phrase.split()) <= 6:
-        return str(random.randint(100, 200)) + 'ms'
-    elif len(next_phrase.split()) <= 9:
-        return str(random.randint(150, 250)) + 'ms'
-    elif len(next_phrase.split()) <= 12:
-        return str(random.randint(200, 300)) + 'ms'
+def break_comma(next_phrase, shorts=False):
+    if shorts:
+        # break time is 100ms
+        return '100ms'
     else:
-        return str(random.randint(300, 400)) + 'ms'
+        # the break time is based on the length of the next phrase, in words. Vary from 100-400ms
+        if len(next_phrase.split()) <= 3:
+            # get a random break time from 50-150ms
+            return str(random.randint(50, 150)) + 'ms'
+        elif len(next_phrase.split()) <= 6:
+            return str(random.randint(100, 200)) + 'ms'
+        elif len(next_phrase.split()) <= 9:
+            return str(random.randint(150, 250)) + 'ms'
+        elif len(next_phrase.split()) <= 12:
+            return str(random.randint(200, 300)) + 'ms'
+        else:
+            return str(random.randint(300, 400)) + 'ms'
 
 
-def break_stop(sentence):
-    # the break time is base on the length of the sentence, in words. Vary from 400-600ms
-    if len(sentence.split()) <= 6:
-        return str(random.randint(300, 400)) + 'ms'
-    elif len(sentence.split()) <= 9:
-        return str(random.randint(350, 450)) + 'ms'
+def break_stop(sentence, shorts=False):
+    if shorts:
+        # break time is 200ms
+        return '200ms'
     else:
-        return str(random.randint(400, 500)) + 'ms'
+        # the break time is base on the length of the sentence, in words. Vary from 400-600ms
+        if len(sentence.split()) <= 6:
+            return str(random.randint(300, 400)) + 'ms'
+        elif len(sentence.split()) <= 9:
+            return str(random.randint(350, 450)) + 'ms'
+        else:
+            return str(random.randint(400, 500)) + 'ms'
 
 
 if __name__ == '__main__':
