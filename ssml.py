@@ -56,7 +56,7 @@ def build_ssml(text, is_shorts=False):
 def break_comma(next_phrase, shorts=False):
     if shorts:
         # break time is 100ms
-        return '100ms'
+        return '50ms'
     else:
         # the break time is based on the length of the next phrase, in words. Vary from 100-400ms
         if len(next_phrase.split()) <= 3:
@@ -75,7 +75,7 @@ def break_comma(next_phrase, shorts=False):
 def break_stop(sentence, shorts=False):
     if shorts:
         # break time is 200ms
-        return '200ms'
+        return '100ms'
     else:
         # the break time is base on the length of the sentence, in words. Vary from 400-600ms
         if len(sentence.split()) <= 6:
